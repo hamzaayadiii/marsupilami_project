@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V15</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{{ asset('images/icons/favicon.ico') }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('fonts/Linearicons-Free-v1.0.0/icon-font.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/animate/animate.css') }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/animsition/css/animsition.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ asset('vendor/daterangepicker/daterangepicker.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+<!--===============================================================================================-->
+</head>
+<body>
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+<div class="container">
+<form action="{{ path("fos_user_security_check") }}" method="post">
+    {% if csrf_token %}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+    {% endif %}
+
+    <label for="username" class="form-control">{{ 'security.login.username'|trans }}</label>
+    <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" required="required" />
+
+    <label for="password" class="form-control">{{ 'security.login.password'|trans }}</label>
+    <input type="password" class="form-control" id="password" name="_password" required="required" />
+
+    <input type="checkbox" class="form-control" id="remember_me" name="_remember_me" value="on" />
+    <label for="remember_me" class="form-control">{{ 'security.login.remember_me'|trans }}</label>
+
+    <input type="submit" id="_submit" name="_submit" value="Connexion"  class="btn btn-primary"/>
+</form>
+    </div>
+	  <link rel="stylesheet" href="{{ asset('assets/bower_components/c3/c3.css') }}"/>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/animsition/js/animsition.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/bootstrap/js/popper.j') }}s"></script>
+	<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/daterangepicker/moment.min.js') }}"></script>
+	<script src="{{ asset('vendor/daterangepicker/daterangepicker.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('vendor/countdowntime/countdowntime.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ asset('js/main.js') }}"></script>
+
+</body>
+</html>

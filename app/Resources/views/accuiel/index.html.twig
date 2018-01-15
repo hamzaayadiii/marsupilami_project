@@ -1,1 +1,54 @@
-aaaaa
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    Ajouter un ami
+
+    <div class="row">
+        <div class="col-mod-3">
+            <div class="well">
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_row(form.amis) }}
+                <input type="submit" class="btn btn-primary" value="Ajouter" name="Ajouter">
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+                
+                
+    <h1>Liste des amis</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>aminame</th>
+                <th>email</th>
+                <th>Age</th>
+                <th>Famille</th>
+                <th>Race</th>
+                <th>Nourriture</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ami in app.user.amis %}
+                <tr>
+                    <td>{{ ami.id }}</td>
+                    <td>{{ ami.username }}</td>
+                    <td>{{ ami.email }}</td>
+                    <td>{{ ami.age }}</td>
+                    <td>{{ ami.famille }}</td>
+                    <td>{{ ami.race }}</td>
+                    <td>{{ ami.nourriture }}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="">Supprimer</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

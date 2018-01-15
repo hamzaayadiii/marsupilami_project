@@ -80,3 +80,9 @@ fos_user:
     from_email:
         address:      hamza@gmail.com
         sender_name:    Fabereo
+    registration:
+        form:
+            type: AppBundle\Form\RegistrationType
+    profile:
+        form:
+            type: AppBundle\Form\ProfileType
