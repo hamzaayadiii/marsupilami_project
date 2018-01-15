@@ -1,0 +1,59 @@
+<?php
+// src/AppBundle/Entity/User.php
+
+namespace AppBundle\Entity;
+
+use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="fos_user")
+ */
+class User extends BaseUser
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    private $age;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    private $famille;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    private $race;
+
+    /**
+     * @ORM\Column(type="text",nullable=true)
+     */
+    private $nourriture;
+
+     /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="amide")
+     * @ORM\JoinTable(name="liste_amis",
+     * joinColumns={
+     *      @ORM\JoinColumn(name="amis_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="ami_id", referencedColumnName="id")
+     *  })
+     */    
+    private $amis;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="amis")
+     */
+    private $amide;
+}
+

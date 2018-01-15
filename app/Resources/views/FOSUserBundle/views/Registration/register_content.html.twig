@@ -1,0 +1,43 @@
+
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+    <div>                       
+    <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    {{ form_widget(form.username,{'attr':{'class':'form-control', 'placeholder':"Nom d'utilisateur"}}) }}
+                                    <i class="ace-icon fa fa-user"></i>
+
+                                </span>
+                            </label>
+                            <div class="space-6"></div>
+                            <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    {{ form_widget(form.email,{'attr':{'class':'form-control', 'placeholder':'Adresse e-mail'}}) }}
+                                    <i class="ace-icon fa fa-envelope-o"></i>
+
+                                </span>
+                            </label>
+                            <div class="space-6"></div>
+                            <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    {{ form_widget(form.plainPassword.first,{'attr':{'class':'form-control', 'placeholder':'Mot de passe'}}) }}
+                                    <i class="ace-icon fa fa-lock"></i>
+
+                                </span>
+                            </label>
+                            <div class="space-6"></div>
+                            <label class="block clearfix">
+                                <span class="block input-icon input-icon-right">
+                                    {{ form_widget(form.plainPassword.second,{'attr':{'class':'form-control', 'placeholder':'Vérification'}}) }}
+                                    <i class="ace-icon fa fa-lock"></i>
+
+                                </span>
+                            </label>
+    </div>
+                                <div class="space"></div>
+    <div  class="clearfix">     
+        <input type="submit" class="pull-right btn btn-sm btn-primary" value="{{ 'Enregistrer'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+  
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+  
