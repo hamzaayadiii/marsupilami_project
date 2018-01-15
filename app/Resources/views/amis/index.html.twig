@@ -13,7 +13,6 @@ Ajouter un ami
 
 </div>
 
-
     <h1>amis list</h1>
     <table>
         <thead>
@@ -29,7 +28,7 @@ Ajouter un ami
             </tr>
         </thead>
         <tbody>
-        {% for ami in amis %}
+        {% for ami in app.user.amis %}
             <tr>
                 <td>{{ ami.id }}</td>
                 <td>{{ ami.username }}</td>
