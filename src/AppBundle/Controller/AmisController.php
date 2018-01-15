@@ -29,11 +29,8 @@ class AmisController extends Controller {
             $em->flush();
         }
         return $this->render('accuiel/index.html.twig', array(
-                    
                     'form' => $form->createView(),
         ));
-        
-   
     }
 
     /**
@@ -60,37 +57,29 @@ class AmisController extends Controller {
             $em->flush();
         }
 
-       
+
         return $this->render('amis/index.html.twig', array(
-                    
                     'form' => $form->createView(),
         ));
     }
 
-     /**
-     * @Route("/amis", name="amis_retirer")
+    /**
+     * @Route("/retirer", name="amis_retirer")
      */
     public function retireramisAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm('AppBundle\Form\amisType', null);
         if ($request->isMethod('GET')) {
-            $amis = $request->query->get('id');
-            $ami = $em->getRepository('AppBundle:User')->find($amis);
             $currentUserId = $this->get('security.token_storage')->getToken()->getUser()->getId();
             $currentUser = $em->getRepository('AppBundle:User')->find($currentUserId);
-            if($ami)
-            $currentUser->removeAmi($ami);
+            $IdAmi = $request->query->get('id');
+            $ami = $em->getRepository('AppBundle:User')->find($IdAmi);
+            if ($ami)
+                $currentUser->removeAmi($ami);
             $em = $this->getDoctrine()->getManager();
             $em->persist($currentUser);
             $em->flush();
+            return $this->redirectToRoute('accueil');
         }
-
-        $amis = $em->getRepository('AppBundle:User')->findAll();
-        return $this->render('amis/index.html.twig', array(
-                    'amis' => $amis,
-                    'form' => $form->createView(),
-        ));
     }
 
-    
 }

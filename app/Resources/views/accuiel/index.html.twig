@@ -14,14 +14,14 @@
             </div>
         </div>
     </div>
-                
-                
+
+
     <h1>Liste des amis</h1>
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>aminame</th>
+                <th>username</th>
                 <th>email</th>
                 <th>Age</th>
                 <th>Famille</th>
@@ -41,11 +41,7 @@
                     <td>{{ ami.race }}</td>
                     <td>{{ ami.nourriture }}</td>
                     <td>
-                        <ul>
-                            <li>
-                                <a href="">Supprimer</a>
-                            </li>
-                        </ul>
+                        <a href="{{ path('amis_retirer', { 'id': ami.id }) }}" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i> Supprimer</a>
                     </td>
                 </tr>
             {% endfor %}
