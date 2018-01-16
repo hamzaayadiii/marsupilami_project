@@ -12,11 +12,26 @@ use Doctrine\ORM\Query;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
-       public function liste() {
+       public function listeAmis($idUtilisateur) {
+
+
         return $this->getEntityManager()
-                       ->createQueryBuilder()
+                        ->createQueryBuilder()
+                        ->select('u,a')
+                        ->from('AppBundle:User','u')
+                        ->leftJoin('u.amis', 'a')
+                        ->where('u.id = :idUtilisateur')
+                        ->setParameter('idUtilisateur', $idUtilisateur)
+                        ->getQuery()
+                        ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+    } 
+
+         public function liste() {
+        return $this->getEntityManager()
+                        ->createQueryBuilder()
                         ->select('u')
-                        ->from('appBundle:User','u')
-                        ->leftJoin('a.amis', 'a')
+                        ->from('AppBundle:User','u')
+                        ->getQuery()
                         ->getResult(Query::HYDRATE_ARRAY);
-    }       
+    }      
+}

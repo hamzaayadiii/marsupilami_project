@@ -2,7 +2,7 @@
 {% block body %}
 
     Ajouter un ami
-<div class="container" ng-app="app" ng-controller="app" ng-init="listeAmis()">
+<div class="container" ng-app="app" ng-controller="app" ng-init="listeAmis();listeUtilisateurs()">
 
 
 
@@ -11,16 +11,92 @@
 
     <div class="row">
         <div class="col-mod-3">
-            <div class="well">
-                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                {{ form_row(form.amis) }}
-                <input type="submit" class="btn btn-primary" value="Ajouter" name="Ajouter">
-                {{ form_end(form) }}
+                                        <select class="form-control" ng-model="nouveauAmi" >
+                                            <option value="">Selectionner un ami</option>
+                                            <option value="{[{ utilisateur.id }]}" ng-repeat="(key,utilisateur) in utilisateurs">{[{ utilisateur.username }]}</option>
+                                        </select>
 
-            </div>
-        </div>
+
+
+      
+
+        <div class="col-mod-3">
+     <input type="button" ng-click="AjouterAmi()" class="btn btn-primary" value="Ajouter" name="Ajouter">
+
+  </div>
+
     </div>
 
+
+
+  <div class="row">
+                                <div class="col-sm-2 pull-right">
+                                    <div class="input-group pull-right">
+                                        <select ng-model="matiereSearch" >
+                                            <option value="">Filtrer par Famille</option>
+                                            <option value="{[{ matiere.nom }]}" ng-repeat="(key,matiere) in matieresArray">{[{ matiere.nom }]}</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="col-sm-2 pull-right">
+                                    <div class="input-group pull-right">
+                                        <select  ng-model="sessionsSearch" >
+                                            <option value="">Filtrer par Race</option>
+                                            <option value="{[{ session.nom }]}" ng-repeat="(key,session) in sessionsArray">{[{ session.nom }]}</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="col-sm-2 pull-right">
+                                    <div class="input-group pull-right">
+                                        <input type="text" ng-model="searchText" class="form-control pull-left input-sm" placeholder="Chercher...">
+                                    </div>
+                                </div>
+                            </div> 
+
+
+                            <table id="dynamic-table table" class="table table-striped">
+                             <thead>
+                                 <th>Username</th>
+                                 <th>Age</th>
+                                 <th>Famille</th>
+                                 <th>Race</th>
+                                 <th>Nourriture</th>
+                             </thead>
+                                <tbody ng-repeat="(key, ami) in amis"
+{#
+                                = (filterList | filter: {     
+                                }: true) | start: (currentPage - 1) * perPage | limitTo: perPage"
+#}
+                                >
+                                    <tr>
+                                        <td>{[{ami.username}]}</td>
+                                        <td>{[{ami.age}]}</td>
+                                        <td>{[{ami.famille }]}</td>
+                                        <td>{[{ami.race}]}</td>
+                                        <td>{[{ami.nourriture }]} </td>
+                                        <td><button class="btn btn-danger" ng-click="retirerAmi(ami.id)">Retirer</button></td>
+                                    </tr>
+                                    </body>
+                            </table>
+                            {[{amis.length}]} Resultats 
+                        </div>
+
+                        <div uib-pagination total-items="amis.length" items-per-page="10" next-text="Suivant "
+                             previous-text="Précédent" ng-model="currentPage" max-size="maxSize"
+                             class="pagination-sm pull-right" boundary-link-numbers="true"></div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+{#
 
     <h1>Liste des amis</h1>
     <table class="table table-bordered">
@@ -53,6 +129,7 @@
             {% endfor %}
         </tbody>
     </table>
+    #}
     </div>
 {% endblock %}
 
@@ -66,14 +143,41 @@
             
          
 
-            $scope.AjouterAmi = function ()
+   $scope.retirerAmi = function (id)
             {
-                var url = "";
+
+                console.log(id);
+                var url = "{{path('api_retirer_ami')}}";
                 var postaction = $resource(url, null,
                         {
                             'post': {method: 'POST'}
                         });
-                postaction.post(null, $scope.nouveauAmi,
+$scope.retirer = {};
+$scope.retirer.id = id;
+                postaction.post(null, $scope.retirer,
+                        function (data) {
+                            $scope.listeAmis();
+                        },
+                        function (error) {
+                            alert("Votre demande est invalide");
+                        });
+            };
+
+            
+         
+
+
+            $scope.AjouterAmi = function ()
+            {
+                var url = "{{path('api_ajouter_ami')}}";
+                var postaction = $resource(url, null,
+                        {
+                            'post': {method: 'POST'}
+                        });
+$scope.nouveau = {};
+$scope.nouveau.nouveauAmi = $scope.nouveauAmi;
+
+                postaction.post(null, $scope.nouveau,
                         function (data) {
                             $("#btn_ajouter_ami").click();
 
@@ -89,22 +193,49 @@
             };
 
             
-            
-            $scope.listeAmis = function ()
+         
+         
+
+            $scope.listeUtilisateurs = function ()
             {
                 $scope.chargment = true;
-                var url = "";
+                var url = "{{ path('api_utilisateurs')}}";
                 var infos = $resource(url);
                 infos.get(
                         function (data) {
-                            var tasks = [];
-                            $scope.raceArray = data.matieres;
-                            $scope.familleArray = data.niveaux;
-
-                            if(data.amis)
+                            if(data.utilisateurs)
                             {
-                            $scope.amis = data.amis;
-                            console.log($scope.amis)
+                            $scope.utilisateurs = data.utilisateurs;
+                            console.log($scope.utilisateurs)
+                            }
+                        },
+                        function (error) {
+                        });
+                $scope.chargment = false;
+            };
+
+
+            $scope.listeAmis = function ()
+            {
+                $scope.chargment = true;
+                var url = "{{ path('api_amis')}}";
+                var infos = $resource(url);
+                infos.get(
+                        function (data) {
+                          
+                            //$scope.raceArray = data.matieres;
+                            //$scope.familleArray = data.niveaux;
+
+                            if(data.utilisateur)
+                            {
+                            $scope.amis = data.utilisateur.amis;
+
+
+
+
+                            if($scope.amis)
+                            console.log($scope.amis.liste_amis)
+
                       
                                 $scope.perPage = 10;
                                 $scope.maxSize = 5;

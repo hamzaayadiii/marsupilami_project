@@ -8,7 +8,10 @@ use AppBundle\Form\FoodType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class AmisController extends Controller {
 
@@ -80,6 +83,106 @@ class AmisController extends Controller {
             $em->flush();
             return $this->redirectToRoute('accueil');
         }
+    }
+
+    /**
+     *
+     * @Route("/api/ami", name="api_amis" ,options = { "expose" = true })
+     * @Method("GET")
+     */
+    public function ApiListeAmisAction(Request $request) {
+        $utilisateur = $this->container->get('security.token_storage')->getToken()->getUser();
+        if ($utilisateur) {
+                $em = $this->getDoctrine()->getManager();
+
+             //   return new JsonResponse($utilisateur->getId());
+ $utilisateur = $em->getRepository('AppBundle:User')->listeAmis($utilisateur->getId());
+        }
+        return new JsonResponse(array(
+            'message' => "Liste chargé avec success.",
+            'utilisateur' => $utilisateur,
+          
+                ), Response::HTTP_OK
+        );
+    }
+
+
+    /**
+     *
+     * @Route("/api/utilisateur", name="api_utilisateurs" ,options = { "expose" = true })
+     * @Method("GET")
+     */
+    public function ApiListeUtilisateursAction(Request $request) {
+        $utilisateur = $this->container->get('security.token_storage')->getToken()->getUser();
+        if ($utilisateur) {
+                $em = $this->getDoctrine()->getManager();
+                $utilisateurs = $em->getRepository('AppBundle:User')->liste();
+        }
+        return new JsonResponse(array(
+            'message' => "Liste chargé avec success.",
+            'utilisateurs' => $utilisateurs,
+          
+                ), Response::HTTP_OK
+        );
+    }
+
+     /**
+     * Creates a new cour entity.
+     *
+     * @Route("/api/ajouter", name="api_ajouter_ami")
+     * @Method({"POST"})
+     */
+    public function apiAjouterAmiAction(Request $request) {
+      
+        $em = $this->getDoctrine()->getManager();
+//        $form = $this->createForm('AppBundle\Form\UserType', $users);
+  //      $form->handleRequest($request);
+            $body = $request->getContent();
+            $data = json_decode($body, true);
+            $amis = $data['nouveauAmi'];
+            $ami = $em->getRepository('AppBundle:User')->find($amis);
+            $currentUserId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+            $currentUser = $em->getRepository('AppBundle:User')->find($currentUserId);
+            $currentUser->addAmi($ami);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($currentUser);
+            $em->flush();
+
+
+            return new JsonResponse(array(
+                'message' => "Ami ajouté avec success")
+                    , Response::HTTP_OK
+            );
+        
+     
+    }
+
+
+ /**
+     * Creates a new cour entity.
+     *
+     * @Route("/api/retirer", name="api_retirer_ami")
+     * @Method({"POST"})
+     */
+    public function apiRetirerAmiAction(Request $request) {
+      
+        $em = $this->getDoctrine()->getManager();
+            $body = $request->getContent();
+            $data = json_decode($body, true);
+            $amis = $data['id'];
+            $ami = $em->getRepository('AppBundle:User')->find($amis);
+            $currentUserId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+            $currentUser = $em->getRepository('AppBundle:User')->find($currentUserId);
+            $currentUser->removeAmi($ami);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($currentUser);
+            $em->flush();
+            return new JsonResponse(array(
+                'message' => "Ami retirer avec success")
+                    , Response::HTTP_OK
+            );
+        
+     
     }
 
 }
