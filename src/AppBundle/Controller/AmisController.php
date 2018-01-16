@@ -127,7 +127,6 @@ class AmisController extends Controller {
     }
 
      /**
-     * Creates a new cour entity.
      *
      * @Route("/api/ajouter", name="api_ajouter_ami")
      * @Method({"POST"})
@@ -158,8 +157,7 @@ class AmisController extends Controller {
     }
 
 
- /**
-     * Creates a new cour entity.
+    /**
      *
      * @Route("/api/retirer", name="api_retirer_ami")
      * @Method({"POST"})
