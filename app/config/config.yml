@@ -86,3 +86,7 @@ fos_user:
     profile:
         form:
             type: AppBundle\Form\ProfileType
+
+
+
+            

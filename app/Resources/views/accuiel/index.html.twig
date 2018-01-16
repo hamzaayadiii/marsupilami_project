@@ -2,6 +2,12 @@
 {% block body %}
 
     Ajouter un ami
+<div class="container" ng-app="app" ng-controller="app" ng-init="listeAmis()">
+
+
+
+
+<button name="listeAmis" id="listeAmis" ng-click="listeAmis" class="btn btn-primary">Actualiser</button>
 
     <div class="row">
         <div class="col-mod-3">
@@ -47,4 +53,113 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+ <script>
+        var app = angular.module('app', ['ngResource', 'datatables', 'ui.bootstrap']);
+        app.controller('app', function ($scope, $resource, $filter) {
+          
+            $scope.loading = false;
+            
+         
+
+            $scope.AjouterAmi = function ()
+            {
+                var url = "";
+                var postaction = $resource(url, null,
+                        {
+                            'post': {method: 'POST'}
+                        });
+                postaction.post(null, $scope.nouveauAmi,
+                        function (data) {
+                            $("#btn_ajouter_ami").click();
+
+                            for (var key in $scope.nouveauAmi) {
+                                $scope.nouveauAmi[key] = null;
+                            }
+
+                            $scope.listeAmis();
+                        },
+                        function (error) {
+                            alert("Votre demande est invalide");
+                        });
+            };
+
+            
+            
+            $scope.listeAmis = function ()
+            {
+                $scope.chargment = true;
+                var url = "";
+                var infos = $resource(url);
+                infos.get(
+                        function (data) {
+                            var tasks = [];
+                            $scope.raceArray = data.matieres;
+                            $scope.familleArray = data.niveaux;
+
+                            if(data.amis)
+                            {
+                            $scope.amis = data.amis;
+                            console.log($scope.amis)
+                      
+                                $scope.perPage = 10;
+                                $scope.maxSize = 5;
+                                $scope.setPage = function (pageNo) {
+                                    $scope.currentPage = pageNo;
+                                };
+                                $scope.$watch('searchText', function (term) {
+                                    var obj = term;
+                                    $scope.filterList = $filter('filter')($scope.amis, obj);
+                                    $scope.currentPage = 1;
+                                });
+                            }
+
+                        },
+                        function (error) {
+                        });
+                $scope.chargment = false;
+            };
+
+            $scope.pushToArray = function (array, value) {
+                if (array.indexOf(value) === -1) {
+                    array.push(value);
+                }
+                return array;
+            };
+
+        });
+
+        app.config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+        });
+
+        app.filter('unique', function () {
+            return function (collection, keyname) {
+                var output = [],
+                        keys = [];
+                angular.forEach(collection, function (item) {
+                    var key = item[keyname];
+                    if (keys.indexOf(key) === -1) {
+                        keys.push(key);
+                        output.push(item);
+                    }
+                });
+                return output;
+            };
+        });
+
+        app.filter('start', function () {
+            return function (input, start) {
+                if (!input || !input.length) {
+                    return;
+                }
+                start = +start;
+                return input.slice(start);
+            };
+        });
+    </script>
 {% endblock %}
